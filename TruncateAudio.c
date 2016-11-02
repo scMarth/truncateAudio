@@ -9,6 +9,13 @@
 #include <stdlib.h>
 #include "math.h"
 
+#define TRUNCATE_VAL 2000
+
+numChannelError(){
+   perror("Error: Input .wav file is not single channel.\n");
+   exit(1);
+}
+
 printFileFormatError(){
    perror("Error: Input file is not a valid .WAV file.\n");
 }
@@ -46,8 +53,17 @@ int main(int argc, char **argv) {
              ch5 == 'W' && ch6 == 'A' && ch7 == 'V' && ch8 == 'E')){
             printFileFormatError();
          }
-      }
 
+         /*
+         // Make sure .wav file is single channel
+         fseek(file,22, SEEK_SET);
+         ch1 = fgetc(file);
+         ch2 = fgetc(file);
+         if (!(ch1 == 0x01 && ch2 == 0x00)){
+            numChannelError();
+         }
+         */
+      }
 
       FILE *outfile = fopen("output.wav", "wb");
       if (outfile == NULL){
@@ -97,16 +113,13 @@ int main(int argc, char **argv) {
          if (number >= 32768) number -= (2*32768);
 
 
-         if (number >= 9000){
-            number = 9000;
-         }else if (number <= -9000){
-            number = -9000;
+         if (number >= TRUNCATE_VAL){
+            number = TRUNCATE_VAL;
+         }else if (number <= -TRUNCATE_VAL){
+            number = -TRUNCATE_VAL;
          }
 
-
          //printf("%d\n", number);
-
-
          ch1=0x00;
          ch2=0x00;
          for (j=0; j<=7; j++){

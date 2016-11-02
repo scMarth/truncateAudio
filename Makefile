@@ -1,10 +1,19 @@
-all : TruncateAudio wavFileTestbed
+CC=gcc
+CFLAGS=-c -lm
 
-wavFileTestbed :
-	gcc -o wavFileTestbed wavFileTestbed.c -lm
+all: wavFileTestbed TruncateAudio
 
-TruncateAudio :
-	gcc -o TruncateAudio TruncateAudio.c -lm
+wavFileTestbed : wavFileTestbed.o
+	$(CC) -o wavFileTestbed wavFileTestbed.o -lm
+
+TruncateAudio : TruncateAudio.o
+	$(CC) -o TruncateAudio TruncateAudio.o -lm
+
+wavFileTestbed.o : wavFileTestbed.c
+	$(CC) $(CFLAGS) wavFileTestbed.c
+
+TruncateAudio.o : TruncateAudio.c
+	$(CC) $(CFLAGS) TruncateAudio.c
 
 
 clean :
